@@ -107,21 +107,26 @@ def calc_multiplicities(polynom, roots):
         
     return multiplicity_set
 
-def calc_complex_roots(polynom, roots,mult_set):
-    print("Init:", polynom)
+#used to stepwise factor a polynomials real roots (rational reals) to get the part w/  unreal roots
+def stepwise_simplifier(polynom,roots,mult_set):
     for x in range(len(roots)):
-        #polynom =  calc_pnom_quotient(polynom,roots[x])
-        #print(polynom, "<-polynom", roots[x], "<= associated root")
         n=0
         while(n<mult_set[x]):
             temp_pn = calc_pnom_quotient(polynom, roots[x])
-            print(temp_pn, "resultant temp pnom", roots[x], "<= associated root")
+            del temp_pn[len(temp_pn)-1]
+            #print(temp_pn, "resultant temp pnom", roots[x], "<= associated root")
             n+=1
-        polynom = temp_pn
+            polynom = temp_pn
+    if(len(temp_pn)==3):
+        temp_pn = list(get_unreal_roots(temp_pn))
+        return temp_pn
+    else:
+        return ""
 
-    return temp_pn
+def get_unreal_roots(polynom):
+    from qmath import qfrm
+    return qfrm(polynom[0],polynom[1],polynom[2])
 
 
-
-def calc_final_quotient (quotient):
-    final_breakdown = []
+#def calc_final_quotient (quotient):
+#    final_breakdown = []
